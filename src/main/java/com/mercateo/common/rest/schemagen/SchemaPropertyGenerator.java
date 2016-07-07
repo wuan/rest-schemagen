@@ -9,6 +9,7 @@ import com.mercateo.common.rest.schemagen.generator.ObjectContextBuilder;
 import com.mercateo.common.rest.schemagen.generator.PathContext;
 import com.mercateo.common.rest.schemagen.generator.ReferencedJsonPropertyFinder;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
+import com.mercateo.common.rest.schemagen.object.DataObject;
 import com.mercateo.common.rest.schemagen.util.EnumUtil;
 
 import java.lang.reflect.Field;
@@ -67,6 +68,21 @@ public class SchemaPropertyGenerator {
         return ImmutableJsonPropertyResult.of(
                 rootJsonProperty,
                 referencedJsonPropertyFinder.getReferencedJsonProperties(rootJsonProperty));
+    }
+
+    public JsonPropertyResult generateSchemaProperty(DataObject dataObject) {
+        JsonProperty rootJsonProperty = generateSchemaProperty("#", dataObject);
+        return null;
+    }
+
+    public JsonProperty generateSchemaProperty(String name, DataObject dataObject) {
+        final Map<String, DataObject> children = dataObject.getChildren();
+
+        for (Map.Entry<String, DataObject> childEntry : children.entrySet()) {
+
+        }
+
+        return null;
     }
 
     private JsonProperty updateName(JsonProperty jsonProperty, String name) {

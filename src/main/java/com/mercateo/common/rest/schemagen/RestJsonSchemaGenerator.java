@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 
 import com.mercateo.common.rest.schemagen.generator.JsonPropertyResult;
 import com.mercateo.common.rest.schemagen.generator.ObjectContextBuilder;
+import com.mercateo.common.rest.schemagen.object.DataObject;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,6 +164,8 @@ public class RestJsonSchemaGenerator implements JsonSchemaGenerator {
 
     private Optional<ObjectNode> generateJsonSchema(ObjectContext<?> objectContext,
             SchemaPropertyContext schemaPropertyContext) {
+        schemaPropertyGenerator.generateSchemaProperty(new DataObject(objectContext.getGenericType(), schemaPropertyContext));
+
         final JsonPropertyResult jsonPropertyResult = schemaPropertyGenerator.generateSchemaProperty(objectContext,
                 schemaPropertyContext);
         JsonProperty rootJsonProperty = jsonPropertyResult.getRoot();
