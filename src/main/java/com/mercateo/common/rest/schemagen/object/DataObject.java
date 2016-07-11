@@ -18,9 +18,13 @@ public class DataObject {
     private final PathContext pathContext;
 
     public DataObject(GenericType<?> genericType, SchemaPropertyContext schemaPropertyContext) {
+        this(ObjectContext.buildFor(genericType).build(), new PathContext(), schemaPropertyContext);
+    }
+
+    private DataObject(ObjectContext objectContext, PathContext pathContext, SchemaPropertyContext schemaPropertyContext) {
+        this.objectContext = objectContext;
+        this.pathContext = pathContext;
         this.schemaPropertyContext = schemaPropertyContext;
-        objectContext = ObjectContext.buildFor(genericType).build();
-        pathContext = new PathContext();
     }
 
     public Map<String, DataObject> getChildren() {
@@ -44,15 +48,28 @@ public class DataObject {
         List<DataProperty> properties = new ArrayList<>();
         ObjectContext currentObjectContext = this.objectContext;
         do {
-            final Class<?> rawType = objectContext.getGenericType().getRawType();
             for (Field field : objectContext.getGenericType().getDeclaredFields()) {
-                properties.add(ImmutableDataProperty.of(field.getName(), createAnnotationsMap(field.getAnnotations()), null));
+                properties.add(getDataPropertyFor(field));
             }
         } while ((currentObjectContext = currentObjectContext.forSuperType()) != null);
         return properties;
     }
 
-    private Map<Class<? extends Annotation>, ? extends Annotation> createAnnotationsMap(Annotation[] annotations) {
-            Arrays.stream(annotations).collect(Collectors.toMap())
-        }
+    private DataProperty getDataPropertyFor(Field field) {
+        final ObjectContext<Object> targetObjectContext = objectContext.forField(field);
+        final DataObject targetDataObject = new DataObject(targetObjectContext, pathContext.enter(field.getName(), targetObjectContext.getType()), schemaPropertyContext);
+        return ImmutableDataProperty.of(field.getName(), createAnnotationsMap(field.getAnnotations()), targetDataObject, object -> {
+            try {
+                return field.get(object);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            }
+        });
     }
+
+    private Map<Class<? extends Annotation>, ? extends Annotation> createAnnotationsMap(Annotation[] annotations) {
+        return Arrays.stream(annotations).collect(Collectors.toMap(
+            annotation -> annotation.getClass(),
+            annotation -> annotation));
+    }
+}

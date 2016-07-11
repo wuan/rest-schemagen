@@ -5,6 +5,7 @@ import org.immutables.value.Value;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
+import java.util.function.Function;
 
 @Value.Immutable
 @TupleStyle
@@ -14,4 +15,6 @@ public interface DataProperty {
     Map<Class<? extends Annotation>, ? extends Annotation> annotations();
 
     DataObject object();
+
+    Function<Object, Object> valueAccessor();
 }
