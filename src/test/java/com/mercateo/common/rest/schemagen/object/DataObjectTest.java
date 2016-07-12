@@ -1,6 +1,7 @@
 package com.mercateo.common.rest.schemagen.object;
 
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.mercateo.common.rest.schemagen.SchemaPropertyContext;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
 import com.mercateo.common.rest.schemagen.parameter.CallContext;
@@ -18,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class DataObjectTest {
 
-    private DataObject dataObject;
+    private CallContext callContext;
+    private SchemaPropertyContext schemaPropertyContext;
 
     static class TestData {
         String value;
@@ -32,17 +34,25 @@ public class DataObjectTest {
         TestData baz;
     }
 
+    static class TestWithUnwrappedClass {
+        String value;
+
+        @JsonUnwrapped
+        TestClass testClass;
+    }
+
     @Mock
     private FieldCheckerForSchema fieldCheckerForSchema;
 
     @Before
     public void setUp() {
-        final SchemaPropertyContext schemaPropertyContext = new SchemaPropertyContext(CallContext.create(), fieldCheckerForSchema);
-        dataObject = new DataObject(GenericType.of(TestClass.class), schemaPropertyContext);
+        callContext = CallContext.create();
+        schemaPropertyContext = new SchemaPropertyContext(callContext, fieldCheckerForSchema);
     }
 
     @Test
     public void shouldMapSimpleClasses() {
+        DataObject dataObject = new DataObject(GenericType.of(TestClass.class), schemaPropertyContext);
         final Map<String, DataObject> children = dataObject.getChildren();
 
         assertThat(children.keySet()).containsExactly("bar", "baz", "foo");
@@ -63,6 +73,14 @@ public class DataObjectTest {
         final DataObject foo = children.get("foo");
         assertThat(foo.getChildren()).isEmpty();
         assertThat(foo.getType()).isEqualTo(String.class);
+    }
+
+    @Test
+    public void shouldMapUnwrappedContent() {
+        DataObject dataObject = new DataObject(GenericType.of(TestWithUnwrappedClass.class), schemaPropertyContext);
+        final Map<String, DataObject> children = dataObject.getChildren();
+
+        assertThat(children.keySet()).containsExactly("bar", "baz", "foo", "value");
     }
 
 }

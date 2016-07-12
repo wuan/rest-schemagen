@@ -73,7 +73,7 @@ public class DataObject {
 
     private Map<Class<? extends Annotation>, ? extends Annotation> createAnnotationsMap(Annotation[] annotations) {
         return Arrays.stream(annotations).collect(Collectors.toMap(
-            annotation -> annotation.getClass(),
+            Annotation::annotationType,
             annotation -> annotation));
     }
 
