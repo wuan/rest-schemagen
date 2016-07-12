@@ -12,7 +12,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -76,9 +83,10 @@ public class DataObjectTest {
     }
 
     @Test
-    public void shouldMapUnwrappedContent() {
+    public void shouldMapUnwrappedContent() throws IntrospectionException {
         DataObject dataObject = new DataObject(GenericType.of(TestWithUnwrappedClass.class), schemaPropertyContext);
         final Map<String, DataObject> children = dataObject.getChildren();
+
 
         assertThat(children.keySet()).containsExactly("bar", "baz", "foo", "value");
     }

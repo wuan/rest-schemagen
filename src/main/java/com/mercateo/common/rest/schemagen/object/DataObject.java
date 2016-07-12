@@ -7,10 +7,13 @@ import com.mercateo.common.rest.schemagen.generator.ObjectContext;
 import com.mercateo.common.rest.schemagen.generator.PathContext;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
 
+import java.beans.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DataObject {
@@ -49,14 +52,41 @@ public class DataObject {
     private List<DataProperty> getProperties() {
         List<DataProperty> properties = new ArrayList<>();
         if (objectContext.getPropertyType() == PropertyType.OBJECT) {
-            ObjectContext currentObjectContext = this.objectContext;
-            do {
-                for (Field field : objectContext.getGenericType().getDeclaredFields()) {
-                    properties.add(getDataPropertyFor(field));
-                }
-            } while ((currentObjectContext = currentObjectContext.forSuperType()) != null);
+            getPropertyFields(properties, objectContext);
         }
         return properties;
+    }
+
+    private void getPropertyFields(List<DataProperty> properties, ObjectContext objectContext) {
+        do {
+            for (Field field : objectContext.getGenericType().getDeclaredFields()) {
+                if (!field.isSynthetic()) {
+                    properties.add(getDataPropertyFor(field));
+                }
+            }
+        } while ((objectContext = objectContext.forSuperType()) != null);
+    }
+
+    private void getPropertyGetters(Class<?> clazz) {
+        final BeanInfo beanInfo;
+        try {
+            beanInfo = Introspector.getBeanInfo(clazz);
+            final Map<String, Function<Object, Object>> methodMap = Arrays.stream(beanInfo.getPropertyDescriptors())
+                .filter(pd -> Objects.nonNull(pd.getReadMethod()))
+                .collect(Collectors.toMap(FeatureDescriptor::getName, this::getAddf));
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Function<Object, Object> getAddf(PropertyDescriptor pd) {
+        return object -> {
+            try {
+                return pd.getReadMethod().invoke(object);
+            } catch (IllegalAccessException|InvocationTargetException e) {
+                return null;
+            }
+        };
     }
 
     private DataProperty getDataPropertyFor(Field field) {
