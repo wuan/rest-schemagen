@@ -9,12 +9,12 @@ import java.util.function.Function;
 
 @Value.Immutable
 @TupleStyle
-public interface DataProperty {
+public interface DataProperty <U> {
     String name();
 
     Map<Class<? extends Annotation>, ? extends Annotation> annotations();
 
-    DataObject object();
+    DataObject<U> object();
 
-    Function<Object, Object> valueAccessor();
+    Function<?, U> valueAccessor();
 }

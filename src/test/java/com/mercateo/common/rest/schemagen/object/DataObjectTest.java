@@ -2,9 +2,7 @@ package com.mercateo.common.rest.schemagen.object;
 
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.mercateo.common.rest.schemagen.SchemaPropertyContext;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
-import com.mercateo.common.rest.schemagen.parameter.CallContext;
 import com.mercateo.common.rest.schemagen.plugin.FieldCheckerForSchema;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,52 +13,49 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataObjectTest {
 
-    private CallContext callContext;
-    private SchemaPropertyContext schemaPropertyContext;
-
-    static class TestData {
-        String value;
-    }
-
-    static class TestClass {
-        String foo;
-
-        int bar;
-
-        TestData baz;
-    }
-
-    static class TestWithUnwrappedClass {
-        String value;
-
-        @JsonUnwrapped
-        TestClass testClass;
-    }
-
     @Mock
     private FieldCheckerForSchema fieldCheckerForSchema;
 
     @Before
     public void setUp() {
-        callContext = CallContext.create();
-        schemaPropertyContext = new SchemaPropertyContext(callContext, fieldCheckerForSchema);
     }
 
     @Test
-    public void shouldMapSimpleClasses() {
-        DataObject dataObject = new DataObject(GenericType.of(TestClass.class), schemaPropertyContext);
-        final Map<String, DataObject> children = dataObject.getChildren();
+    public void shouldMapNothingWhenFullyDisabled() {
+        final SchemaConfiguration schemaConfiguration = SchemaConfiguration.builder()
+                .build();
+
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, schemaConfiguration);
+        final Map<String, DataObject<?>> children = dataObject.getChildren();
+
+        assertThat(children.keySet()).isEmpty();
+    }
+
+    @Test
+    public void test() throws IntrospectionException {
+        final BeanInfo beanInfo = Introspector.getBeanInfo(TestClass.class, Object.class);
+
+        assertThat(beanInfo).isNotNull();
+    }
+    @Test
+    public void shouldMapMethods() {
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, SchemaConfiguration.METHODS_ENABLED);
+        final Map<String, DataObject<?>> children = dataObject.getChildren();
+
+        assertThat(children.keySet()).containsExactly("getFoo");
+    }
+
+    @Test
+    public void shouldMapFields() {
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, SchemaConfiguration.FIELDS_ENABLED);
+        final Map<String, DataObject<?>> children = dataObject.getChildren();
 
         assertThat(children.keySet()).containsExactly("bar", "baz", "foo");
 
@@ -68,8 +63,8 @@ public class DataObjectTest {
         assertThat(bar.getChildren()).isEmpty();
         assertThat(bar.getType()).isEqualTo(int.class);
 
-        final DataObject baz = children.get("baz");
-        final Map<String, DataObject> bazChildren = baz.getChildren();
+        final DataObject<?> baz = children.get("baz");
+        final Map<String, DataObject<?>> bazChildren = baz.getChildren();
         assertThat(bazChildren.keySet()).containsExactly("value");
         assertThat(baz.getType()).isEqualTo(TestData.class);
 
@@ -83,12 +78,59 @@ public class DataObjectTest {
     }
 
     @Test
-    public void shouldMapUnwrappedContent() throws IntrospectionException {
-        DataObject dataObject = new DataObject(GenericType.of(TestWithUnwrappedClass.class), schemaPropertyContext);
-        final Map<String, DataObject> children = dataObject.getChildren();
+    public void shouldNotMapUnwrappedContent() throws IntrospectionException {
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestWithUnwrappedClass.class), null, null, SchemaConfiguration.FIELDS_ENABLED);
+        final Map<String, DataObject<?>> children = dataObject.getChildren();
 
 
-        assertThat(children.keySet()).containsExactly("bar", "baz", "foo", "value");
+        assertThat(children.keySet()).containsExactly("testClass", "value");
+    }
+
+    static class TestData {
+        String value;
+    }
+
+    static class TestClass {
+        String foo;
+        boolean bar;
+        TestData baz;
+
+
+        public String foo() {
+            return foo;
+        }
+
+        public String isFoo() {
+            return foo;
+        }
+
+        public boolean isBar() {
+            return bar;
+        }
+
+        public boolean getBar() {
+            return bar;
+        }
+
+        public String addFoo(String foo) {
+            this.foo += foo;
+            return this.foo;
+        }
+
+        public String getFoo() {
+            return null;
+        }
+
+        public void setFoo(String foo) {
+            this.foo = foo;
+        }
+    }
+
+    static class TestWithUnwrappedClass {
+        String value;
+
+        @JsonUnwrapped
+        TestClass testClass;
     }
 
 }

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -33,6 +34,10 @@ public abstract class GenericType<T> {
         return Iterable.class.isAssignableFrom(getRawType());
     }
 
+    public static <T> GenericType<T> of(Class<T> type) {
+        return of(type, null);
+    }
+
     public static GenericType<?> of(Type type) {
         return of(type, null);
     }
@@ -57,5 +62,17 @@ public abstract class GenericType<T> {
         return getRawType().getDeclaredFields();
     }
 
+    public Method[] getDeclaredMethods() {
+        return getRawType().getDeclaredMethods();
+    }
+
     public abstract GenericType<? super T> getSuperType();
+
+    public static GenericType<?> of(Field field) {
+        return of(field.getGenericType(), field.getType());
+    }
+
+    public static GenericType<?> of(Method method) {
+        return of(method.getGenericReturnType(), method.getReturnType());
+    }
 }
