@@ -1,5 +1,6 @@
 package com.mercateo.common.rest.schemagen.object;
 
+import com.mercateo.common.rest.schemagen.generictype.GenericType;
 import com.mercateo.common.rest.schemagen.internal.TupleStyle;
 import org.immutables.value.Value;
 
@@ -9,10 +10,12 @@ import java.util.function.Function;
 
 @Value.Immutable
 @TupleStyle
-public interface DataProperty<U> {
+public interface RawDataProperty<T, U> {
     String name();
 
-    Map<Class<? extends Annotation>, ? extends Annotation> annotations();
+    GenericType<U> genericType();
 
-    DataObject<U> object();
+    Annotation[] annotations();
+
+    Function<T, U> valueAccessor();
 }

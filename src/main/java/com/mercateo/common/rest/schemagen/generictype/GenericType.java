@@ -7,6 +7,9 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Iterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public abstract class GenericType<T> {
 
@@ -74,5 +77,45 @@ public abstract class GenericType<T> {
 
     public static GenericType<?> of(Method method) {
         return of(method.getGenericReturnType(), method.getReturnType());
+    }
+
+    public Stream<GenericType<?>> hierarchy() {
+
+        Iterable<GenericType<?>> resultIterable = new GenericTypeIterable(this);
+
+        return StreamSupport.stream(resultIterable.spliterator(), false);
+
+    }
+    private static class GenericTypeIterable implements Iterable<GenericType<?>> {
+
+        private final GenericType<?> genericType;
+
+        GenericTypeIterable(GenericType<?> genericType) {
+            this.genericType = genericType;
+        }
+
+        @Override
+        public Iterator<GenericType<?>> iterator() {
+            return new GenericTypeIterator(genericType);
+        }
+    }
+
+    private static class GenericTypeIterator implements Iterator<GenericType<?>> {
+        GenericType<?> currentType;
+
+        GenericTypeIterator(GenericType<?> genericType) {
+            this.currentType = genericType;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentType != null && currentType.getSuperType() != null;
+        }
+
+        @Override
+        public GenericType<?> next() {
+            return currentType.getSuperType();
+        }
+
     }
 }

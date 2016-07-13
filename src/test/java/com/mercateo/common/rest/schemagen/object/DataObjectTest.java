@@ -3,6 +3,7 @@ package com.mercateo.common.rest.schemagen.object;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
+import com.mercateo.common.rest.schemagen.object.properties.FieldCollector;
 import com.mercateo.common.rest.schemagen.plugin.FieldCheckerForSchema;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +30,10 @@ public class DataObjectTest {
 
     @Test
     public void shouldMapNothingWhenFullyDisabled() {
-        final SchemaConfiguration schemaConfiguration = SchemaConfiguration.builder()
+        final PropertyBehaviour propertyBehaviour = PropertyBehaviour.builder()
                 .build();
 
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, schemaConfiguration);
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, propertyBehaviour);
         final Map<String, DataObject<?>> children = dataObject.getChildren();
 
         assertThat(children.keySet()).isEmpty();
@@ -46,7 +47,8 @@ public class DataObjectTest {
     }
     @Test
     public void shouldMapMethods() {
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, SchemaConfiguration.METHODS_ENABLED);
+        PropertyBehaviour.builder().addAllPropertyCollectors(new FieldCollector()).build();
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, PropertyBehaviour.METHODS_ENABLED);
         final Map<String, DataObject<?>> children = dataObject.getChildren();
 
         assertThat(children.keySet()).containsExactly("getFoo");
@@ -54,7 +56,7 @@ public class DataObjectTest {
 
     @Test
     public void shouldMapFields() {
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, SchemaConfiguration.FIELDS_ENABLED);
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, PropertyBehaviour.FIELDS_ENABLED);
         final Map<String, DataObject<?>> children = dataObject.getChildren();
 
         assertThat(children.keySet()).containsExactly("bar", "baz", "foo");
@@ -79,7 +81,7 @@ public class DataObjectTest {
 
     @Test
     public void shouldNotMapUnwrappedContent() throws IntrospectionException {
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestWithUnwrappedClass.class), null, null, SchemaConfiguration.FIELDS_ENABLED);
+        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestWithUnwrappedClass.class), null, null, PropertyBehaviour.FIELDS_ENABLED);
         final Map<String, DataObject<?>> children = dataObject.getChildren();
 
 
