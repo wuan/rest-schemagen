@@ -164,7 +164,8 @@ public class RestJsonSchemaGenerator implements JsonSchemaGenerator {
 
     private Optional<ObjectNode> generateJsonSchema(ObjectContext<?> objectContext,
             SchemaPropertyContext schemaPropertyContext) {
-        schemaPropertyGenerator.generateSchemaProperty(new DataObject(objectContext.getGenericType(), objectContext.getDefaultValue(), objectContext.getAllowedValues(), null));
+        final List<?> allowedValues = objectContext.getAllowedValues();
+        schemaPropertyGenerator.generateSchemaProperty(new DataObject(objectContext.getGenericType(), objectContext.getDefaultValue(), allowedValues, null));
 
         final JsonPropertyResult jsonPropertyResult = schemaPropertyGenerator.generateSchemaProperty(objectContext,
                 schemaPropertyContext);

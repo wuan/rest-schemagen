@@ -12,20 +12,19 @@ import java.util.stream.Stream;
 public class FieldCollector implements RawDataPropertyCollector {
 
     @Override
-    public <T, U> Stream<RawDataProperty<T, U>> forType(GenericType<T> genericType) {
+    public Stream<RawDataProperty> forType(GenericType<?> genericType) {
         return Arrays.stream(genericType.getDeclaredFields())
                 .filter(field -> !field.isSynthetic())
                 .map(this::mapRawDataProperty);
     }
 
-    private <T, U> RawDataProperty<T, U> mapRawDataProperty(Field field) {
-        return ImmutableRawDataProperty.of(field.getName(), GenericType.of(field), field.getAnnotations(), object -> valueAccessor(field, object));
+    private RawDataProperty mapRawDataProperty(Field field) {
+        return ImmutableRawDataProperty.of(field.getName(), GenericType.of(field), field.getAnnotations(), (Object object) -> valueAccessor(field, object));
     }
 
-    private <T, U> U valueAccessor(Field field, T object) {
+    private Object valueAccessor(Field field, Object object) {
         try {
-            //noinspection unchecked
-            return (U) field.get(object);
+            return field.get(object);
         } catch (IllegalAccessException e) {
             throw new IllegalStateException(e);
         }

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class MethodCollector implements RawDataPropertyCollector {
 
     @Override
-    public <T, U> Stream<RawDataProperty<T, U>> forType(GenericType<T> genericType) {
+    public Stream<RawDataProperty> forType(GenericType<?> genericType) {
             return Arrays.stream(genericType.getDeclaredMethods())
                     .filter(method -> !method.isSynthetic())
                     .filter(method -> method.getDeclaringClass() != Object.class)
@@ -22,14 +22,13 @@ public class MethodCollector implements RawDataPropertyCollector {
                     .map(this::mapRawDataProperty);
     }
 
-    private <T, U> RawDataProperty<T, U> mapRawDataProperty(Method method) {
-        return ImmutableRawDataProperty.of(method.getName(), GenericType.of(method), method.getAnnotations(), object -> valueAccessor(method, object));
+    private RawDataProperty mapRawDataProperty(Method method) {
+        return ImmutableRawDataProperty.of(method.getName(), GenericType.of(method), method.getAnnotations(), (Object object) -> valueAccessor(method, object));
     }
 
-    private <T, U> U valueAccessor(Method method, T object) {
+    private Object valueAccessor(Method method, Object object) {
         try {
-            //noinspection unchecked
-            return (U) method.invoke(object);
+            return method.invoke(object);
         } catch (IllegalAccessException|InvocationTargetException e) {
             throw new IllegalStateException(e);
         }

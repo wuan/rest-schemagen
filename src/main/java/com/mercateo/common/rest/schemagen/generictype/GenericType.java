@@ -1,5 +1,6 @@
 package com.mercateo.common.rest.schemagen.generictype;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 import java.lang.reflect.Field;
@@ -109,12 +110,14 @@ public abstract class GenericType<T> {
 
         @Override
         public boolean hasNext() {
-            return currentType != null && currentType.getSuperType() != null;
+            return currentType != null;
         }
 
         @Override
         public GenericType<?> next() {
-            return currentType.getSuperType();
+            GenericType<?> type = currentType;
+            currentType = currentType.getSuperType();
+            return type;
         }
 
     }

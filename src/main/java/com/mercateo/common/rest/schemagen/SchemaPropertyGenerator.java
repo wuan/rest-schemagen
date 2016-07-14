@@ -76,9 +76,9 @@ public class SchemaPropertyGenerator {
     }
 
     public JsonProperty generateSchemaProperty(String name, DataObject dataObject) {
-        final Map<String, DataObject<?>> children = dataObject.getChildren();
+        final Map<String, DataObject> children = dataObject.getChildren();
 
-        for (Map.Entry<String, DataObject<?>> childEntry : children.entrySet()) {
+        for (Map.Entry<String, DataObject> childEntry : children.entrySet()) {
 
         }
 

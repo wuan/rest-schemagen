@@ -4,6 +4,7 @@ package com.mercateo.common.rest.schemagen.object;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
 import com.mercateo.common.rest.schemagen.object.properties.FieldCollector;
+import com.mercateo.common.rest.schemagen.object.properties.MethodCollector;
 import com.mercateo.common.rest.schemagen.plugin.FieldCheckerForSchema;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,8 +34,8 @@ public class DataObjectTest {
         final PropertyBehaviour propertyBehaviour = PropertyBehaviour.builder()
                 .build();
 
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, propertyBehaviour);
-        final Map<String, DataObject<?>> children = dataObject.getChildren();
+        DataObject dataObject = new DataObject(GenericType.of(TestClass.class), null, null, propertyBehaviour);
+        final Map<String, DataObject> children = dataObject.getChildren();
 
         assertThat(children.keySet()).isEmpty();
     }
@@ -45,28 +46,30 @@ public class DataObjectTest {
 
         assertThat(beanInfo).isNotNull();
     }
+
     @Test
     public void shouldMapMethods() {
-        PropertyBehaviour.builder().addAllPropertyCollectors(new FieldCollector()).build();
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, PropertyBehaviour.METHODS_ENABLED);
-        final Map<String, DataObject<?>> children = dataObject.getChildren();
+        final PropertyBehaviour propertyBehaviour = PropertyBehaviour.builder().addPropertyCollectors(new MethodCollector()).build();
+        DataObject dataObject = new DataObject(GenericType.of(TestClass.class), null, null, propertyBehaviour);
+        final Map<String, DataObject> children = dataObject.getChildren();
 
         assertThat(children.keySet()).containsExactly("getFoo");
     }
 
     @Test
     public void shouldMapFields() {
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestClass.class), null, null, PropertyBehaviour.FIELDS_ENABLED);
-        final Map<String, DataObject<?>> children = dataObject.getChildren();
+        final PropertyBehaviour propertyBehaviour = PropertyBehaviour.builder().addPropertyCollectors(new FieldCollector()).build();
+        DataObject dataObject = new DataObject(GenericType.of(TestClass.class), null, null, propertyBehaviour);
+        final Map<String, DataObject> children = dataObject.getChildren();
 
         assertThat(children.keySet()).containsExactly("bar", "baz", "foo");
 
         final DataObject bar = children.get("bar");
         assertThat(bar.getChildren()).isEmpty();
-        assertThat(bar.getType()).isEqualTo(int.class);
+        assertThat(bar.getType()).isEqualTo(boolean.class);
 
-        final DataObject<?> baz = children.get("baz");
-        final Map<String, DataObject<?>> bazChildren = baz.getChildren();
+        final DataObject baz = children.get("baz");
+        final Map<String, DataObject> bazChildren = baz.getChildren();
         assertThat(bazChildren.keySet()).containsExactly("value");
         assertThat(baz.getType()).isEqualTo(TestData.class);
 
@@ -81,8 +84,9 @@ public class DataObjectTest {
 
     @Test
     public void shouldNotMapUnwrappedContent() throws IntrospectionException {
-        DataObject<?> dataObject = new DataObject<>(GenericType.of(TestWithUnwrappedClass.class), null, null, PropertyBehaviour.FIELDS_ENABLED);
-        final Map<String, DataObject<?>> children = dataObject.getChildren();
+        final PropertyBehaviour propertyBehaviour = PropertyBehaviour.builder().addPropertyCollectors(new FieldCollector()).build();
+        DataObject dataObject = new DataObject(GenericType.of(TestWithUnwrappedClass.class), null, null, propertyBehaviour);
+        final Map<String, DataObject> children = dataObject.getChildren();
 
 
         assertThat(children.keySet()).containsExactly("testClass", "value");

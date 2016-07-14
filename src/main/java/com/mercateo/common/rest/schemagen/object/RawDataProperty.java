@@ -10,12 +10,12 @@ import java.util.function.Function;
 
 @Value.Immutable
 @TupleStyle
-public interface RawDataProperty<T, U> {
+public interface RawDataProperty {
     String name();
 
-    GenericType<U> genericType();
+    GenericType<?> genericType();
 
     Annotation[] annotations();
 
-    Function<T, U> valueAccessor();
+    Function<?, ?> valueAccessor();
 }

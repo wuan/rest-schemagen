@@ -14,5 +14,5 @@ public interface DataProperty<U> {
 
     Map<Class<? extends Annotation>, ? extends Annotation> annotations();
 
-    DataObject<U> object();
+    DataObject object();
 }
