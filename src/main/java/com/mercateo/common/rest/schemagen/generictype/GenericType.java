@@ -1,5 +1,7 @@
 package com.mercateo.common.rest.schemagen.generictype;
 
+import com.googlecode.gentyref.GenericTypeReflector;
+
 import static java.util.Objects.requireNonNull;
 
 import java.lang.reflect.Field;
@@ -58,4 +60,10 @@ public abstract class GenericType<T> {
     }
 
     public abstract GenericType<? super T> getSuperType();
+
+    public static GenericType<?> of(Field field, Type type) {
+        final Class<?> childClass = field.getType();
+        final Type childType = GenericTypeReflector.getExactFieldType(field, type);
+        return of(childType, childClass);
+    }
 }
