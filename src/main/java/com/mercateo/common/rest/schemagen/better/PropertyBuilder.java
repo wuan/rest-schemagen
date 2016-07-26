@@ -17,7 +17,7 @@ import com.mercateo.common.rest.schemagen.generictype.GenericType;
 
 public class PropertyBuilder {
 
-    ConcurrentHashMap<GenericType<?>, PropertyDescriptor> map = new ConcurrentHashMap<>();
+    ConcurrentHashMap<GenericType<?>, PropertyDescriptor> knownDescriptors = new ConcurrentHashMap<>();
 
     public Property from(Class<?> propertyClass) {
         return from(GenericType.of(propertyClass));
@@ -35,19 +35,26 @@ public class PropertyBuilder {
 
     public Property from(String name, GenericType<?> genericType, List<Annotation> annotations,
             Function valueAccessor) {
+        final PropertyDescriptor propertyDescriptor = getPropertyDescriptor(genericType);
+
+        Collection<Annotation> propertyAnnotations = new ArrayList<>(annotations);
+        propertyAnnotations.addAll(propertyDescriptor.annotations());
+
+        return ImmutableProperty.of(name, propertyDescriptor, valueAccessor, propertyAnnotations);
+    }
+
+    private PropertyDescriptor getPropertyDescriptor(GenericType<?> genericType) {
+        return knownDescriptors.computeIfAbsent(genericType, this::createPropertyDescriptor);
+    }
+
+    private PropertyDescriptor createPropertyDescriptor(GenericType<?> genericType) {
         final PropertyType propertyType = PropertyTypeMapper.of(genericType);
         final List<Property> children = propertyType == PropertyType.OBJECT ? createChildProperties(
                 genericType) : Collections.emptyList();
 
         final List<Annotation> classAnnotations = Arrays.asList(genericType.getRawType()
                 .getAnnotations());
-        final PropertyDescriptor propertyDescriptor = ImmutablePropertyDescriptor.of(genericType,
-                children, classAnnotations);
-
-        Collection<Annotation> propertyAnnotations = new ArrayList<>(annotations);
-        propertyAnnotations.addAll(classAnnotations);
-
-        return ImmutableProperty.of(name, propertyDescriptor, valueAccessor, propertyAnnotations);
+        return ImmutablePropertyDescriptor.of(genericType, children, classAnnotations);
     }
 
     private List<Property> createChildProperties(GenericType<?> genericType) {

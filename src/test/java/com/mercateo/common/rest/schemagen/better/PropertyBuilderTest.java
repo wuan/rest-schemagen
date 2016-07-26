@@ -110,6 +110,15 @@ public class PropertyBuilderTest {
         assertThat(firstElement.children()).isEmpty();
     }
 
+    @Test
+    public void returnsIdentialTypeDescriptorsForSameType() throws Exception {
+        Property property1 = propertyBuilder.from(PropertyHolder.class);
+        Property property2 = propertyBuilder.from(PropertyHolder.class);
+
+        assertThat(property1).isNotSameAs(property2);
+        assertThat(property1.propertyDescriptor()).isSameAs(property2.propertyDescriptor());
+    }
+
     private <T> T getFirstElement(Collection<T> collection) {
         return collection.iterator().next();
     }
