@@ -95,6 +95,21 @@ public class PropertyBuilderTest {
         assertThat(annotations).containsExactly(Annotation1.class, Annotation2.class);
     }
 
+    @Test
+    public void returnInheritedProperty() throws Exception {
+        Property property = propertyBuilder.from(InheritedPropertyHolder.class);
+
+        assertThat(property.children()).extracting(Property::name).containsExactly("property");
+    }
+
+    @Test
+    public void nonObjectTypesShouldHaveNoChildren() throws Exception {
+        Property property = propertyBuilder.from(PropertyHolder.class);
+
+        final Property firstElement = getFirstElement(property.children());
+        assertThat(firstElement.children()).isEmpty();
+    }
+
     private <T> T getFirstElement(Collection<T> collection) {
         return collection.iterator().next();
     }
@@ -120,5 +135,8 @@ public class PropertyBuilderTest {
     @Annotation2
     static class GenericPropertyHolder<T> {
         T property;
+    }
+
+    static class InheritedPropertyHolder extends PropertyHolder {
     }
 }

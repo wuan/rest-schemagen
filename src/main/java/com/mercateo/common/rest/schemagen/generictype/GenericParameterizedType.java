@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 import com.googlecode.gentyref.GenericTypeReflector;
 
@@ -23,7 +24,7 @@ public class GenericParameterizedType<T> extends GenericType<T> {
 
     @Override
     public String getSimpleName() {
-        return getRawType().getSimpleName();
+        return rawType.getSimpleName();
     }
 
     @Override
@@ -32,12 +33,12 @@ public class GenericParameterizedType<T> extends GenericType<T> {
         if (actualTypeArguments.length > 1) {
             throw new IllegalStateException(type + " not supported for subtyping");
         }
-        return GenericType.of(actualTypeArguments[0], getRawType());
+        return GenericType.of(actualTypeArguments[0], rawType);
     }
 
     @Override
     public GenericType<? super T> getSuperType() {
-        final Class<? super T> superclass = getRawType().getSuperclass();
+        final Class<? super T> superclass = rawType.getSuperclass();
         return superclass != null ? GenericType.of(GenericTypeReflector.getExactSuperType(type,
                 superclass), superclass) : null;
     }
@@ -45,5 +46,19 @@ public class GenericParameterizedType<T> extends GenericType<T> {
     @Override
     public String toString() {
         return type.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GenericParameterizedType<?> that = (GenericParameterizedType<?>) o;
+        return Objects.equals(rawType, that.rawType) &&
+                Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, type);
     }
 }

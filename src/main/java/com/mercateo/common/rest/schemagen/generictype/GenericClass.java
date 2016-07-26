@@ -1,6 +1,7 @@
 package com.mercateo.common.rest.schemagen.generictype;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 import com.googlecode.gentyref.GenericTypeReflector;
 
@@ -44,5 +45,18 @@ public class GenericClass<T> extends GenericType<T> {
     @Override
     public String toString() {
         return getRawType().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GenericType<?> that = (GenericType<?>) o;
+        return Objects.equals(getRawType(), that.getRawType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRawType());
     }
 }

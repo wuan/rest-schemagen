@@ -8,10 +8,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 public abstract class GenericType<T> {
 
-    private final Class<T> rawType;
+    protected final Class<T> rawType;
 
     GenericType(Class<T> rawType) {
         this.rawType = requireNonNull(rawType);
