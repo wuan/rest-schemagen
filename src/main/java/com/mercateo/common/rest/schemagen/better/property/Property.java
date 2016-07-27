@@ -1,5 +1,6 @@
-package com.mercateo.common.rest.schemagen.better;
+package com.mercateo.common.rest.schemagen.better.property;
 
+import com.google.common.collect.Multimap;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
 import com.mercateo.common.rest.schemagen.internal.TupleStyle;
 import org.immutables.value.Value;
@@ -31,5 +32,5 @@ public interface Property {
         return propertyDescriptor().genericType();
     }
 
-    Collection<Annotation> annotations();
+    Multimap<Class<? extends Annotation>, Annotation> annotations();
 }

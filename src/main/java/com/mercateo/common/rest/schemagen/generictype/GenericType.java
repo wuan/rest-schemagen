@@ -6,6 +6,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -63,8 +64,14 @@ public abstract class GenericType<T> {
     public abstract GenericType<? super T> getSuperType();
 
     public static GenericType<?> of(Field field, Type type) {
-        final Class<?> childClass = field.getType();
-        final Type childType = GenericTypeReflector.getExactFieldType(field, type);
-        return of(childType, childClass);
+        final Class<?> fieldClass = field.getType();
+        final Type fieldType = GenericTypeReflector.getExactFieldType(field, type);
+        return of(fieldType, fieldClass);
+    }
+
+    public static GenericType<?> of(Method method, Type type) {
+        final Class<?> returnClass = method.getReturnType();
+        final Type returnType = GenericTypeReflector.getExactReturnType(method, type);
+        return of(returnType, returnClass);
     }
 }
