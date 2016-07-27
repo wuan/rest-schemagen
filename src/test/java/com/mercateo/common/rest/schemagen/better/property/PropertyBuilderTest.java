@@ -97,7 +97,7 @@ public class PropertyBuilderTest {
         Property property = propertyBuilder.from(TwoLevelPropertyHolder.class);
 
         final Property firstElement1 = getFirstElement(property.children());
-        assertThat(getAnnotations(firstElement1)).containsExactly(Annotation1.class, Annotation2.class);
+        assertThat(getAnnotations(firstElement1)).containsExactlyInAnyOrder(Annotation1.class, Annotation2.class);
     }
 
     private Set<Class<? extends Annotation>> getAnnotations(Property firstElement1) {
