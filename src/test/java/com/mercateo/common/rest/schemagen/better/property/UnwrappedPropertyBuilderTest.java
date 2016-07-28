@@ -1,9 +1,9 @@
-package com.mercateo.common.rest.schemagen.better.process;
+package com.mercateo.common.rest.schemagen.better.property;
 
 import java.util.Arrays;
 
 import com.mercateo.common.rest.schemagen.better.property.Property;
-import com.mercateo.common.rest.schemagen.generictype.GenericType;
+import com.mercateo.common.rest.schemagen.better.property.UnwrappedPropertyBuilder;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,28 +1,31 @@
 package com.mercateo.common.rest.schemagen.better.property;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.mercateo.common.rest.schemagen.better.property.FieldCollector;
-import com.mercateo.common.rest.schemagen.better.property.FieldCollectorConfig;
-import com.mercateo.common.rest.schemagen.better.property.MethodCollector;
-import com.mercateo.common.rest.schemagen.better.property.Property;
-import com.mercateo.common.rest.schemagen.better.property.PropertyBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class PropertyBuilderTest {
+    private Logger log = LoggerFactory.getLogger(PropertyBuilderTest.class);
 
     private PropertyBuilder propertyBuilder;
+
+    public static <T> T getFirstElement(Collection<T> collection) {
+        return collection.iterator().next();
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -160,8 +163,47 @@ public class PropertyBuilderTest {
         assertThat(getAnnotations(firstElement)).containsExactlyInAnyOrder(Annotation1.class, Annotation3.class);
     }
 
-    public static <T> T getFirstElement(Collection<T> collection) {
-        return collection.iterator().next();
+    @Test
+    public void followCollectionProperties() throws Exception {
+        Property property = propertyBuilder.from(CollectionPropertyHolder.class);
+        final Property collectionElement = getFirstElement(property.children());
+        final Property collectionTypeElement = getFirstElement(collectionElement.children());
+
+        assertThat(collectionTypeElement).isNotNull();
+        assertThat(collectionTypeElement.name()).isEqualTo("");
+        assertThat(collectionTypeElement.annotations().values()).isEmpty();
+        assertThat(collectionTypeElement.genericType().getRawType()).isEqualTo(String.class);
+
+        final CollectionPropertyHolder collectionPropertyHolder = new CollectionPropertyHolder();
+        collectionPropertyHolder.values = Collections.singletonList("foo");
+
+        assertThat(collectionTypeElement.getValue(collectionPropertyHolder)).isNull();
+    }
+
+    @Test
+    public void followNestedCollectionProperties() throws Exception {
+        Property property = propertyBuilder.from(NestedCollectionPropertyHolder.class);
+        final Property collectionElement = getFirstElement(property.children());
+
+        final Property collectionTypeElement = getFirstElement(collectionElement.children());
+        assertThat(collectionTypeElement).isNotNull();
+        assertThat(collectionTypeElement.name()).isEqualTo("");
+        assertThat(collectionTypeElement.annotations().values()).isEmpty();
+        assertThat(collectionTypeElement.genericType().getRawType()).isEqualTo(String[].class);
+
+        final Property nestedCollectionTypeElement = getFirstElement(collectionTypeElement.children());
+
+        assertThat(nestedCollectionTypeElement).isNotNull();
+        assertThat(nestedCollectionTypeElement.name()).isEqualTo("");
+        assertThat(nestedCollectionTypeElement.genericType().getRawType()).isEqualTo(String.class);
+        assertThat(nestedCollectionTypeElement.annotations().values()).isEmpty();
+    }
+
+    @Test
+    @Ignore
+    public void returnPropertyReferenceIfRecursive() throws Exception {
+        Property property = propertyBuilder.from(RecursivePropertyHolder.class);
+        final Property firstElement = getFirstElement(property.children());
     }
 
     @Retention(RetentionPolicy.RUNTIME)
@@ -205,5 +247,19 @@ public class PropertyBuilderTest {
     }
 
     static class InheritedPropertyHolder extends PropertyHolder {
+    }
+
+    static class CollectionPropertyHolder {
+        Collection<String> values;
+    }
+
+    static class NestedCollectionPropertyHolder {
+        Collection<String[]> values;
+    }
+
+    static class RecursivePropertyHolder {
+        List<RecursivePropertyHolder> children;
+
+        String name;
     }
 }

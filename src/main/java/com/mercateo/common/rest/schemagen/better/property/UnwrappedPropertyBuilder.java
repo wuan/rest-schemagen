@@ -1,4 +1,4 @@
-package com.mercateo.common.rest.schemagen.better.process;
+package com.mercateo.common.rest.schemagen.better.property;
 
 import java.util.ArrayList;
 import java.util.List;
