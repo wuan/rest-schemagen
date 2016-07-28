@@ -43,10 +43,6 @@ public class PropertyBuilder {
         return from(GenericType.of(propertyClass));
     }
 
-    public Property from(Class<?> propertyClass, Type propertyType) {
-        return from(GenericType.of(propertyType, propertyClass));
-    }
-
     public Property from(GenericType<?> genericType) {
         return from(ROOT_NAME, genericType, HashMultimap.create(),
                 PropertyBuilder::rootValueAccessor);

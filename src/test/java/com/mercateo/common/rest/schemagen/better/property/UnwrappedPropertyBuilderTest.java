@@ -1,16 +1,10 @@
 package com.mercateo.common.rest.schemagen.better.property;
 
-import java.util.Arrays;
-
-import com.mercateo.common.rest.schemagen.better.property.Property;
-import com.mercateo.common.rest.schemagen.better.property.UnwrappedPropertyBuilder;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.mercateo.common.rest.schemagen.better.property.FieldCollector;
-import com.mercateo.common.rest.schemagen.better.property.FieldCollectorConfig;
-import com.mercateo.common.rest.schemagen.better.property.PropertyBuilder;
+import java.util.Arrays;
 
 import static com.mercateo.common.rest.schemagen.better.property.PropertyBuilderTest.getFirstElement;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,13 +50,11 @@ public class UnwrappedPropertyBuilderTest {
     static class SecondLevelPropertyHolder {
         @JsonUnwrapped
         PropertyHolder propertyHolder;
-
     }
 
     static class PropertyHolder {
         @JsonUnwrapped
         UnwrappedPropertyHolder unwrappedPropertyHolder;
-
     }
 
     static class UnwrappedPropertyHolder {

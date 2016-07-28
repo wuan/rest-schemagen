@@ -1,17 +1,12 @@
 package com.mercateo.common.rest.schemagen.better.property;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.mercateo.common.rest.schemagen.generictype.GenericType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.mercateo.common.rest.schemagen.better.property.ImmutableProperty;
-import com.mercateo.common.rest.schemagen.better.property.ImmutablePropertyDescriptor;
-import com.mercateo.common.rest.schemagen.better.property.Property;
-import com.mercateo.common.rest.schemagen.better.property.PropertyBuilder;
-import com.mercateo.common.rest.schemagen.better.property.PropertyDescriptor;
-import com.mercateo.common.rest.schemagen.generictype.GenericType;
 
 public class UnwrappedPropertyBuilder {
 
