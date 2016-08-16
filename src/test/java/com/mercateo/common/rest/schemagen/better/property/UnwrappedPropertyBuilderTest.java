@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
 import static com.mercateo.common.rest.schemagen.better.property.PropertyBuilderTest.getFirstElement;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +37,7 @@ public class UnwrappedPropertyBuilderTest {
     }
 
     @Test
-    public void singleLedvelUnwrap() throws Exception {
+    public void singleLevelUnwrapGetValue() throws Exception {
         final Property unwrappedProperty = unwrappedPropertyBuilder.from(PropertyHolder.class);
 
         final PropertyHolder propertyHolder = new PropertyHolder();

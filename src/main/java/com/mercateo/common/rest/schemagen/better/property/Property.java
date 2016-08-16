@@ -7,8 +7,7 @@ import org.immutables.value.Value;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
 import java.util.function.Function;
 
 @Value.Immutable

@@ -12,6 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -200,10 +201,24 @@ public class PropertyBuilderTest {
     }
 
     @Test
-    @Ignore
     public void returnPropertyReferenceIfRecursive() throws Exception {
         Property property = propertyBuilder.from(RecursivePropertyHolder.class);
-        final Property firstElement = getFirstElement(property.children());
+        final Iterator<Property> childrenIterator = property.children().iterator();
+        final Property firstElement = childrenIterator.next();
+
+        assertThat(firstElement.name()).isEqualTo("children");
+
+        final Property firstSubelement = getFirstElement(firstElement.children() );
+        assertThat(firstSubelement.name()).isEmpty();
+        assertThat(firstSubelement.genericType().getRawType()).isEqualTo(RecursivePropertyHolder.class);
+        assertThat(firstSubelement.children()).isEmpty();
+        final PropertyDescriptor propertyDescriptor = firstSubelement.propertyDescriptor();
+        assertThat(propertyDescriptor.children()).hasSize(2);
+
+
+        final Property secondElement = childrenIterator.next();
+        assertThat(secondElement.name()).isEqualTo("name");
+        assertThat(secondElement.genericType().getRawType()).isEqualTo(String.class);
     }
 
     @Retention(RetentionPolicy.RUNTIME)
