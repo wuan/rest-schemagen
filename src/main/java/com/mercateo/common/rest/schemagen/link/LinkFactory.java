@@ -58,7 +58,10 @@ public class LinkFactory<T extends JerseyResource> {
      *            lambda with function call
      * @return the specified link or absent, if the user has not the required
      *         permission to call the resource!
+     *
+     * @deprecated use {{@link #forCall(URI, RelationContainer, MethodInvocation)}} instead
      */
+    @Deprecated
     public Optional<Link> forCall(RelationContainer rel, MethodInvocation<T> methodInvocation) {
         return forCall(rel.getRelation(), methodInvocation);
     }
@@ -77,6 +80,28 @@ public class LinkFactory<T extends JerseyResource> {
      * @return the specified link or absent, if the user has not the required
      *         permission to call the resource!
      */
+    public Optional<Link> forCall(URI baseUri, RelationContainer rel, MethodInvocation<T> methodInvocation,
+                                  CallContext callContext) {
+        return forCall(baseUri, rel.getRelation(), methodInvocation, callContext);
+    }
+
+    /**
+     * computes the link for the resource method, which is called the last time
+     * in the lambda. Please note, that the method has to be non final!
+     *
+     * @param rel
+     *            relation of link
+     * @param methodInvocation
+     *            lambda with function call
+     * @param callContext
+     *            parameter container containing information about allowed and
+     *            default values
+     * @return the specified link or absent, if the user has not the required
+     *         permission to call the resource!
+     *
+     *  @deprecated use {{@link #forCall(URI, RelationContainer, MethodInvocation, CallContext)}} instead
+     */
+    @Deprecated
     public Optional<Link> forCall(RelationContainer rel, MethodInvocation<T> methodInvocation,
             CallContext callContext) {
         return forCall(rel.getRelation(), methodInvocation, callContext);
@@ -107,7 +132,10 @@ public class LinkFactory<T extends JerseyResource> {
      *            lambda with function call
      * @return the specified link or absent, if the user has not the required
      *         permission to call the resource!
+     *
+     * @deprecated use {{@link #forCall(URI, Relation, MethodInvocation)}} instead
      */
+    @Deprecated
     public Optional<Link> forCall(Relation relation, MethodInvocation<T> methodInvocation) {
         return forCall(relation, methodInvocation, Parameter.createContext());
     }
@@ -125,7 +153,10 @@ public class LinkFactory<T extends JerseyResource> {
      *            default values
      * @return the specified link or absent, if the user has not the required
      *         permission to call the resource!
+     *
+     * @deprecated use {{@link #forCall(URI, Relation, MethodInvocation, CallContext)}} instead
      */
+    @Deprecated
     public Optional<Link> forCall(Relation relation, MethodInvocation<T> methodInvocation,
             CallContext callContext) {
         final List<Scope> scopes = createScopes(methodInvocation, callContext);
