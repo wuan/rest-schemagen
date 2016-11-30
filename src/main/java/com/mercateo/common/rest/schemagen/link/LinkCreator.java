@@ -64,7 +64,13 @@ public class LinkCreator {
      * @param relation relation of method
      * @return link with schema if applicable
      */
+
     public Link createFor(List<Scope> scopes, Relation relation) {
+        final URI baseUri = linkFactoryContext.getBaseUri();
+        return createFor(baseUri, scopes, relation);
+    }
+
+    public Link createFor(URI baseUri, List<Scope> scopes, Relation relation) {
         final Class<?> resourceClass = scopes.get(0).getInvokedClass();
         UriBuilder uriBuilder = UriBuilder.fromResource(resourceClass);
 
@@ -90,8 +96,8 @@ public class LinkCreator {
         final Scope lastScopedMethod = Iterables.getLast(scopes);
         addHttpMethod(builder, lastScopedMethod);
         addSchemaIfNeeded(builder, lastScopedMethod);
-        if (linkFactoryContext.getBaseUri() != null) {
-            builder.baseUri(linkFactoryContext.getBaseUri());
+        if (baseUri != null) {
+            builder.baseUri(baseUri);
         }
         return builder.build();
     }
