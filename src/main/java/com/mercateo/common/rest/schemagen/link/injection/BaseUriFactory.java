@@ -21,8 +21,6 @@ public class BaseUriFactory implements Factory<BaseUri> {
 
     public static final String SERVICE_BASE_HEADER = "Service-Base-Path";
 
-    public static final String HTTP_SCHEME = "http";
-
     public static final String HTTPS_SCHEME = "https";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseUriFactory.class);
