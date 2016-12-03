@@ -8,14 +8,6 @@
   <description>Jersey add-on for dynamic link and schema building</description>
   <url>https://github.com/Mercateo/rest-schemagen</url>
   <inceptionYear>2015</inceptionYear>
-
-    <parent>
-        <groupId>com.mercateo.maven</groupId>
-        <artifactId>mvn.pom.corporate</artifactId>
-        <version>0.5.115</version>
-        <relativePath />
-    </parent>
-
   <organization>
     <name>Mercateo AG</name>
     <url>http://www.mercateo.com</url>
@@ -24,12 +16,12 @@
    <system>github</system>
    <url>https://github.com/Mercateo/rest-schemagen/issues</url>
   </issueManagement>
-  <!--<distributionManagement>
+  <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-  </distributionManagement>-->
+  </distributionManagement>
   <licenses>
     <license>
       <name>ASL2</name>
