@@ -1,9 +1,9 @@
 package com.mercateo.common.rest.schemagen.link;
 
-import com.mercateo.common.rest.schemagen.parameter.CallContext;
-
 import java.lang.reflect.Method;
 import java.util.Optional;
+
+import com.mercateo.common.rest.schemagen.parameter.CallContext;
 
 public class CallScope extends Scope {
     private final Optional<CallContext> callContext;
@@ -15,5 +15,11 @@ public class CallScope extends Scope {
 
     public Optional<CallContext> getCallContext() {
         return callContext;
+    }
+
+    @Override
+    public String toString() {
+        return "CallScope{" + "class=" + getInvokedClass().getSimpleName() + ", " + "method=" + getInvokedMethod()
+                .getName() + callContext.map(c -> ", " + c.toString()).orElse("") + '}';
     }
 }

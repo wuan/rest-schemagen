@@ -4,6 +4,8 @@ import com.google.common.collect.Iterables;
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.mercateo.common.rest.schemagen.JsonSchemaGenerator;
 import com.mercateo.common.rest.schemagen.link.relation.Relation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
@@ -33,6 +35,9 @@ import static com.mercateo.common.rest.schemagen.link.helper.ParameterAnnotation
 import static java.util.Objects.requireNonNull;
 
 public class LinkCreator {
+
+    private static final Logger log = LoggerFactory.getLogger(LinkCreator.class);
+
     public static final String TARGET_SCHEMA_PARAM_KEY = "targetSchema";
 
     public static final String SCHEMA_PARAM_KEY = "schema";

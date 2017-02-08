@@ -72,4 +72,12 @@ public class CallContext {
         }
         return Optional.empty();
     }
+
+    @Override
+    public String toString() {
+        return "CallContext{" +
+                "parameters=" + parameters +
+                ", additionalObjects=" + additionalObjects +
+                '}';
+    }
 }

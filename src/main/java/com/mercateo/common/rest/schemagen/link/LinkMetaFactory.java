@@ -43,10 +43,8 @@ public class LinkMetaFactory {
 	 * @param jsonSchemaGenerator
 	 * @param linkFactoryContext
 	 *
-	 * @deprecated please use {@link #create(JsonSchemaGenerator)} instead
 	 * @return
 	 */
-	@Deprecated
 	public static LinkMetaFactory create(JsonSchemaGenerator jsonSchemaGenerator, LinkFactoryContext linkFactoryContext) {
 		return new LinkMetaFactory(jsonSchemaGenerator, linkFactoryContext);
 	}
@@ -58,7 +56,7 @@ public class LinkMetaFactory {
 	 * @param methodCheckerForLink
 	 * @param fieldCheckerForSchema
 	 *
-	 * @deprecated please use {@link #create(JsonSchemaGenerator)} instead
+	 * @deprecated please use {@link #create(JsonSchemaGenerator, LinkFactoryContext)} instead
 	 * @return
 	 */
 	@Deprecated
