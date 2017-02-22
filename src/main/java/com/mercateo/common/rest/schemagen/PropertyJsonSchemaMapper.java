@@ -73,7 +73,7 @@ class PropertyJsonSchemaMapperForRoot {
                 } else {
                     jsonPropertyMapper = objectPropertyMappers.get(PropertyType.OBJECT);
                 }
-                final ObjectNode propertyNode = jsonPropertyMapper.map(jsonProperty);
+                final ObjectNode propertyNode = jsonPropertyMapper.toJson(jsonProperty);
                 if (referencedElements.contains(jsonProperty)) {
                     propertyNode.put("id", jsonProperty.getPath());
                 }

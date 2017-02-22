@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Dimitry Polivave on 22.02.17.
  */
 interface JsonPropertyMapper {
-    ObjectNode map(JsonProperty jsonProperty);
+    ObjectNode toJson(JsonProperty jsonProperty);
 }
 
 class StringJsonPropertyMapper implements JsonPropertyMapper{
@@ -29,7 +29,7 @@ class StringJsonPropertyMapper implements JsonPropertyMapper{
     }
 
     @Override
-    public ObjectNode map(JsonProperty jsonProperty) {
+    public ObjectNode toJson(JsonProperty jsonProperty) {
         final ObjectNode propertyNode = new ObjectNode(nodeFactory);
         propertyNode.put("type", "string");
         genericJsonPropertyMapper.addDefaultAndAllowedValues(propertyNode, jsonProperty, //
@@ -60,7 +60,7 @@ class IntegerJsonPropertyMapper implements JsonPropertyMapper{
     }
 
     @Override
-    public ObjectNode map(JsonProperty jsonProperty) {
+    public ObjectNode toJson(JsonProperty jsonProperty) {
         final ObjectNode propertyNode = new ObjectNode(nodeFactory);
         propertyNode.put("type", "integer");
         genericJsonPropertyMapper.addDefaultAndAllowedValues(propertyNode, jsonProperty, //
@@ -100,7 +100,7 @@ class NumberJsonPropertyMapper implements JsonPropertyMapper{
     }
 
     @Override
-    public ObjectNode map(JsonProperty jsonProperty) {
+    public ObjectNode toJson(JsonProperty jsonProperty) {
         final ObjectNode propertyNode = new ObjectNode(nodeFactory);
         propertyNode.put("type", "number");
         genericJsonPropertyMapper.addDefaultAndAllowedValues(propertyNode, jsonProperty, this::getDefaultNumberValue, this::getAllowedNumberValues);
@@ -130,7 +130,7 @@ class BooleanJsonPropertyMapper implements JsonPropertyMapper{
     }
 
     @Override
-    public ObjectNode map(JsonProperty jsonProperty) {
+    public ObjectNode toJson(JsonProperty jsonProperty) {
         final ObjectNode propertyNode = new ObjectNode(nodeFactory);
         propertyNode.put("type", "boolean");
         propertyNode.set("default", BooleanNode.FALSE);
@@ -149,7 +149,7 @@ class ObjectJsonPropertyMapper implements JsonPropertyMapper {
         this.nodeFactory = nodeFactory;
     }
 
-    public ObjectNode map(JsonProperty jsonProperty) {
+    public ObjectNode toJson(JsonProperty jsonProperty) {
         ObjectNode propertyNode = createObjectNode();
         propertyNode.put("type", "object");
         propertyNode.set("properties", createProperties(jsonProperty.getProperties()));
@@ -193,7 +193,7 @@ class ArrayJsonPropertyMapper implements JsonPropertyMapper {
         this.nodeFactory = nodeFactory;
     }
 
-    public ObjectNode map(JsonProperty jsonProperty) {
+    public ObjectNode toJson(JsonProperty jsonProperty) {
         ObjectNode propertyNode = new ObjectNode(nodeFactory);
         propertyNode.put("type", "array");
         propertyNode.set("items", propertyJsonSchemaMapper//
