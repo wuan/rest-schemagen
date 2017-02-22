@@ -168,27 +168,27 @@ public class SchemaJsonPropertyJsonMapperTest {
     }
 
 
-    public static class ValueResponse {
-        public EmbeddedResponse embedded;
+    private static class ValueResponse {
+        EmbeddedResponse embedded;
 
-        public URL url;
+        URL url;
 
-        public String string1;
+        String string1;
 
-        public Integer integer1;
+        Integer integer1;
 
-        public Float floatNumber1;
+        Float floatNumber1;
 
-        public Double doubleNumber1;
+        Double doubleNumber1;
 
-        public Boolean boolean1;
+        Boolean boolean1;
     }
 
-    public static class ExtendedResponse extends ValueResponse {
+    private static class ExtendedResponse extends ValueResponse {
         URL subUrl;
     }
 
-    public static class EmbeddedResponse {
+    private static class EmbeddedResponse {
         public URL embeddedUrl;
     }
 }
