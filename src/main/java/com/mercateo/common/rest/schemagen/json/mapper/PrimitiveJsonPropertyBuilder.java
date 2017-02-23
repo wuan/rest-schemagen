@@ -11,37 +11,43 @@ class PrimitiveJsonPropertyBuilder {
     final private GenericJsonPropertyMapper genericJsonPropertyMapper;
 
     final private JsonNodeFactory nodeFactory;
-    private ObjectNode propertyNode;
-    private JsonProperty jsonProperty;
 
     PrimitiveJsonPropertyBuilder(JsonNodeFactory nodeFactory) {
         this.genericJsonPropertyMapper = new GenericJsonPropertyMapper(nodeFactory);
         this.nodeFactory = nodeFactory;
     }
 
-    PrimitiveJsonPropertyBuilder createObjectNode(JsonProperty jsonProperty) {
-        this.jsonProperty = jsonProperty;
-        propertyNode = new ObjectNode(nodeFactory);
-        return this;
+    Builder createObjectNode(JsonProperty jsonProperty){
+        return new Builder(jsonProperty);
     }
 
-    PrimitiveJsonPropertyBuilder withType(String type) {
-        propertyNode.put("type", type);
-        return this;
-    }
+    class Builder{
+        private ObjectNode propertyNode;
+        private JsonProperty jsonProperty;
 
-    PrimitiveJsonPropertyBuilder withDefaultAndAllowedValues(Function<Object, JsonNode> nodeCreator) {
-        genericJsonPropertyMapper.addDefaultAndAllowedValues(propertyNode, this.jsonProperty, nodeCreator);
-        return this;
-    }
+        Builder (JsonProperty jsonProperty) {
+            this.jsonProperty = jsonProperty;
+            propertyNode = new ObjectNode(nodeFactory);
+        }
 
-    PrimitiveJsonPropertyBuilder withDefaultValue(JsonNode value) {
-        propertyNode.set("default", value);
-        return this;
-    }
+        Builder withType(String type) {
+            propertyNode.put("type", type);
+            return this;
+        }
 
-    ObjectNode build() {
-        return propertyNode;
-    }
+        Builder withDefaultAndAllowedValues(Function<Object, JsonNode> nodeCreator) {
+            genericJsonPropertyMapper.addDefaultAndAllowedValues(propertyNode, this.jsonProperty, nodeCreator);
+            return this;
+        }
 
+        Builder withDefaultValue(JsonNode value) {
+            propertyNode.set("default", value);
+            return this;
+        }
+
+        ObjectNode build() {
+            return propertyNode;
+        }
+
+    }
 }
