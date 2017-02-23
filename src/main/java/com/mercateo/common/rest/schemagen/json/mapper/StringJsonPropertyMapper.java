@@ -19,7 +19,7 @@ class StringJsonPropertyMapper implements JsonPropertyMapper {
     @Override
     public ObjectNode toJson(JsonProperty jsonProperty) {
         Function<Object,JsonNode> nodeCreator = value -> new TextNode((String) value);
-        final ObjectNode propertyNode = primitiveJsonPropertyBuilder.createObjectNode(jsonProperty).withType("string").withDefaultAndAllowedValues(nodeCreator).build();
+        final ObjectNode propertyNode = primitiveJsonPropertyBuilder.forProperty(jsonProperty).withType("string").withDefaultAndAllowedValues(nodeCreator).build();
         jsonProperty.getSizeConstraints().getMin().ifPresent(x -> propertyNode.put("minLength", x));
         jsonProperty.getSizeConstraints().getMax().ifPresent(x -> propertyNode.put("maxLength", x));
         return propertyNode;

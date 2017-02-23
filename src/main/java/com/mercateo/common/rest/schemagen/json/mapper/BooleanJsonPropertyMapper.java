@@ -20,7 +20,7 @@ class BooleanJsonPropertyMapper implements JsonPropertyMapper {
     public ObjectNode toJson(JsonProperty jsonProperty) {
         Function<Object,JsonNode> nodeCreator = value -> ((Boolean) value) ? BooleanNode.TRUE
                 : BooleanNode.FALSE;
-        return primitiveJsonPropertyBuilder.createObjectNode(jsonProperty)
+        return primitiveJsonPropertyBuilder.forProperty(jsonProperty)
                 .withType("boolean")
                 .withDefaultValue(BooleanNode.FALSE)
                 .withDefaultAndAllowedValues(nodeCreator).build();

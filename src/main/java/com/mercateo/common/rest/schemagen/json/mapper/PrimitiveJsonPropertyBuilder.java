@@ -17,7 +17,7 @@ class PrimitiveJsonPropertyBuilder {
         this.nodeFactory = nodeFactory;
     }
 
-    Builder createObjectNode(JsonProperty jsonProperty){
+    Builder forProperty(JsonProperty jsonProperty){
         return new Builder(jsonProperty);
     }
 

@@ -19,7 +19,7 @@ class IntegerJsonPropertyMapper implements JsonPropertyMapper {
     @Override
     public ObjectNode toJson(JsonProperty jsonProperty) {
         Function<Object,JsonNode> nodeCreator = value -> new IntNode((Integer) value);
-        final ObjectNode propertyNode = primitiveJsonPropertyBuilder.createObjectNode(jsonProperty)
+        final ObjectNode propertyNode = primitiveJsonPropertyBuilder.forProperty(jsonProperty)
                 .withType("integer").withDefaultAndAllowedValues(nodeCreator).build();
         jsonProperty.getValueConstraints().getMin().ifPresent(x -> propertyNode.put("minimum", x));
         jsonProperty.getValueConstraints().getMax().ifPresent(x -> propertyNode.put("maximum", x));

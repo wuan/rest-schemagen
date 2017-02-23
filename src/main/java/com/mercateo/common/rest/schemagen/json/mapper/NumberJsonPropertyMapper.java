@@ -17,7 +17,7 @@ class NumberJsonPropertyMapper implements JsonPropertyMapper {
 
     @Override
     public ObjectNode toJson(JsonProperty jsonProperty) {
-        return primitiveJsonPropertyBuilder.createObjectNode(jsonProperty) //
+        return primitiveJsonPropertyBuilder.forProperty(jsonProperty) //
                 .withType("number").withDefaultAndAllowedValues(this::createNode).build();
     }
 
