@@ -1,6 +1,6 @@
 package com.mercateo.common.rest.schemagen;
 
-import com.mercateo.common.rest.schemagen.link.relation.Rel;
+import com.mercateo.rest.schemagen.link.relation.Rel;
 import org.junit.Before;
 import org.junit.Test;
 

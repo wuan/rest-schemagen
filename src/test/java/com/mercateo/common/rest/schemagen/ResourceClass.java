@@ -13,11 +13,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 
-import com.mercateo.common.rest.schemagen.link.Entry;
-import com.mercateo.common.rest.schemagen.link.LinkMetaFactory;
-import com.mercateo.common.rest.schemagen.link.LinkProperties;
-import com.mercateo.common.rest.schemagen.link.relation.Rel;
-import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
+import com.mercateo.rest.schemagen.link.Entry;
+import com.mercateo.rest.schemagen.link.LinkMetaFactory;
+import com.mercateo.rest.schemagen.link.LinkProperties;
+import com.mercateo.rest.schemagen.link.relation.Rel;
+import com.mercateo.rest.schemagen.types.ObjectWithSchema;
 
 @Path("resource")
 @Produces(MediaType.APPLICATION_JSON)

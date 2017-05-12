@@ -4,7 +4,6 @@ package com.mercateo.common.rest.schemagen;
 import org.junit.Test;
 
 import javax.ws.rs.core.Link;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

@@ -12,10 +12,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.mercateo.common.rest.schemagen.link.LinkFactory;
-import com.mercateo.common.rest.schemagen.link.SchemaGenerator;
-import com.mercateo.common.rest.schemagen.link.helper.MethodInvocation;
-import com.mercateo.common.rest.schemagen.link.relation.Rel;
+import com.mercateo.rest.schemagen.link.LinkFactory;
+import com.mercateo.rest.schemagen.link.SchemaGenerator;
+import com.mercateo.rest.schemagen.link.helper.MethodInvocation;
+import com.mercateo.rest.schemagen.link.relation.Rel;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SchemaGeneratorTest {

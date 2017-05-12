@@ -5,9 +5,9 @@
 /.settings
 /bin
 /target
-/*.iml
-/*.eml
+*.iml
+*.eml
 /*.idea
 /build
-/*.ipr
-/*.iws
+*.ipr
+*.iws

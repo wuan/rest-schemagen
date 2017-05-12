@@ -1,7 +1,7 @@
 package com.mercateo.common.rest.schemagen.plugin;
 
 
-import com.mercateo.common.rest.schemagen.link.Scope;
+import com.mercateo.rest.schemagen.link.Scope;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

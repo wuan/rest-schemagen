@@ -1,14 +1,13 @@
 package com.mercateo.common.rest.schemagen;
 
-import com.mercateo.common.rest.schemagen.link.relation.Rel;
-import com.mercateo.common.rest.schemagen.link.relation.Relation;
-import com.mercateo.common.rest.schemagen.link.relation.RelationContainer;
+import com.mercateo.rest.schemagen.link.relation.Rel;
+import com.mercateo.rest.schemagen.link.relation.Relation;
+import com.mercateo.rest.schemagen.link.relation.RelationContainer;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;

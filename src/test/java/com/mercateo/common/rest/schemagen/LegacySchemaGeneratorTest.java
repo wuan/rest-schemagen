@@ -11,9 +11,9 @@ import java.util.Set;
 
 import javax.ws.rs.NotFoundException;
 
-import com.mercateo.common.rest.schemagen.generator.ImmutableJsonPropertyResult;
-import com.mercateo.common.rest.schemagen.generator.JsonPropertyResult;
-import com.mercateo.common.rest.schemagen.generator.ObjectContextBuilder;
+import com.mercateo.rest.schemagen.generator.ImmutableJsonPropertyResult;
+import com.mercateo.rest.schemagen.generator.JsonPropertyResult;
+import com.mercateo.rest.schemagen.generator.ObjectContextBuilder;
 import com.mercateo.common.rest.schemagen.json.mapper.PropertyJsonSchemaMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +21,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.io.CharStreams;
-import com.mercateo.common.rest.schemagen.generator.ObjectContext;
+import com.mercateo.rest.schemagen.generator.ObjectContext;
 import com.mercateo.common.rest.schemagen.generictype.GenericType;
-import com.mercateo.common.rest.schemagen.parameter.CallContext;
-import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
+import com.mercateo.rest.schemagen.parameter.CallContext;
+import com.mercateo.rest.schemagen.types.ObjectWithSchema;
 
 public class LegacySchemaGeneratorTest {
 

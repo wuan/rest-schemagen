@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Sets;
-import com.mercateo.common.rest.schemagen.parameter.CallContext;
+import com.mercateo.rest.schemagen.parameter.CallContext;
 
 
 public class JsonViewCheckerTest {

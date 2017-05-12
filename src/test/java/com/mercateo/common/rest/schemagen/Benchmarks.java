@@ -1,8 +1,8 @@
 package com.mercateo.common.rest.schemagen;
 
-import com.mercateo.common.rest.schemagen.link.LinkFactory;
-import com.mercateo.common.rest.schemagen.link.LinkMetaFactory;
-import com.mercateo.common.rest.schemagen.link.relation.Rel;
+import com.mercateo.rest.schemagen.link.LinkFactory;
+import com.mercateo.rest.schemagen.link.LinkMetaFactory;
+import com.mercateo.rest.schemagen.link.relation.Rel;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
