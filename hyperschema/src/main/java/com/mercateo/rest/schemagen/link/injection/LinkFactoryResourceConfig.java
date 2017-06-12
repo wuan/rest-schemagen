@@ -14,8 +14,8 @@ import com.mercateo.rest.schemagen.link.helper.BaseUriCreator;
 import com.mercateo.rest.schemagen.link.helper.BaseUriCreatorDefault;
 import com.mercateo.common.rest.schemagen.plugin.FieldCheckerForSchema;
 import com.mercateo.common.rest.schemagen.plugin.MethodCheckerForLink;
-import com.mercateo.common.rest.schemagen.plugin.common.FieldCheckerForSchemaFactory;
-import com.mercateo.common.rest.schemagen.plugin.common.MethodCheckerForLinkFactory;
+import com.mercateo.rest.schemagen.plugin.common.FieldCheckerForSchemaFactory;
+import com.mercateo.rest.schemagen.plugin.common.MethodCheckerForLinkFactory;
 
 public class LinkFactoryResourceConfig {
 

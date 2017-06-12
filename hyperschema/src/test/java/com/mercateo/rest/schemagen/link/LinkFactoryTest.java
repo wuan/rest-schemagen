@@ -9,7 +9,7 @@ import com.mercateo.rest.schemagen.link.relation.Rel;
 import com.mercateo.rest.schemagen.link.relation.Relation;
 import com.mercateo.rest.schemagen.parameter.CallContext;
 import com.mercateo.common.rest.schemagen.plugin.FieldCheckerForSchema;
-import com.mercateo.common.rest.schemagen.plugin.common.RolesAllowedChecker;
+import com.mercateo.rest.schemagen.plugin.common.RolesAllowedChecker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

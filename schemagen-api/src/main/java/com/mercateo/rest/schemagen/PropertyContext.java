@@ -1,30 +1,44 @@
 package com.mercateo.rest.schemagen;
 
-import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.immutables.value.Value;
 
 import com.mercateo.immutables.DataClass;
-import org.immutables.value.Value;
 
 @Value.Immutable
 @DataClass
-public interface PropertyContext<T> {
+public abstract class PropertyContext<T> {
 
-    List<T> getAllowedValues();
+    public abstract Set<T> getAllowedValues();
 
-    default boolean hasAllowedValues() {
-        return !getAllowedValues().isEmpty();
+    public abstract Optional<T> getDefaultValue();
+
+    public abstract Set<Class> getViewClasses();
+
+    static <U> PropertyContextBuilder<U> builder() {
+        return new PropertyContextBuilder<>();
     }
 
-    T getDefaultValue();
+    public <U> PropertyContext<U> createInner(Function<T, U> valueAccessor) {
+        final PropertyContextBuilder<U> builder = PropertyContext.builder();
 
-    default boolean hasDefaultValue() {
-        return getDefaultValue() != null;
-    }
+        builder.withAllowedValues(getAllowedValues().stream().map(valueAccessor).filter(
+                Objects::nonNull).collect(Collectors.toSet()));
 
-    Set<Class> getViewClasses();
+        getDefaultValue().ifPresent(defaultValue -> {
+            final U innerDefaultValue = valueAccessor.apply(defaultValue);
+            if (innerDefaultValue != null) {
+                builder.withDefaultValue(innerDefaultValue);
+            }
+        });
 
-    static PropertyContextBuilder builder() {
-        return new PropertyContextBuilder();
+        builder.withViewClasses(getViewClasses());
+
+        return builder.build();
     }
 }

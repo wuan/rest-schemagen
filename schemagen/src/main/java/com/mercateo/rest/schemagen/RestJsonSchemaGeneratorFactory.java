@@ -5,7 +5,7 @@ import org.glassfish.hk2.api.Factory;
 public class RestJsonSchemaGeneratorFactory implements Factory<JsonSchemaGenerator> {
     @Override
     public JsonSchemaGenerator provide() {
-        return new RestJsonSchemaGenerator();
+        return new JsonSchemaGeneratorDefault();
     }
 
     @Override

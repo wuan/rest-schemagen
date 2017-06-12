@@ -1,18 +1,16 @@
 package com.mercateo.rest.schemagen;
 
-import java.lang.reflect.Type;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mercateo.rest.schemagen.generictype.GenericType;
 import com.mercateo.rest.schemagen.plugin.FieldCheckerForSchema;
 
 public interface JsonSchemaGenerator {
 
     /**
      *
-     * @param clazz
-     *            type for which the schema should be generated
-     * @param type
+     * @param genericType
      *            type for which the schema should be generated
      * @param fieldCheckerForSchema
      *            callback to check if a certain field should be included
@@ -21,6 +19,6 @@ public interface JsonSchemaGenerator {
      *
      * @return schema representation as JSON object
      */
-    <T> Optional<ObjectNode> createSchema(Class<T> clazz, Type type, PropertyContext<T> propertyContext,
-            FieldCheckerForSchema fieldCheckerForSchema);
+    <T> Optional<ObjectNode> createSchema(GenericType<T> genericType,
+            PropertyContext<T> propertyContext, FieldCheckerForSchema fieldCheckerForSchema);
 }

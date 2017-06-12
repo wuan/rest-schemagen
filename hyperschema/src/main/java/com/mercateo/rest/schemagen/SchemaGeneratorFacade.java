@@ -8,26 +8,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mercateo.rest.schemagen.annotation.Media;
-import com.mercateo.rest.schemagen.generator.ObjectContext;
-import com.mercateo.rest.schemagen.generator.ObjectContextBuilder;
-import com.mercateo.rest.schemagen.plugin.FieldCheckerForSchema;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.mercateo.rest.schemagen.generictype.GenericType;
-import com.mercateo.rest.schemagen.link.Scope;
-
 import javax.ws.rs.FormParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mercateo.rest.schemagen.annotation.Media;
+import com.mercateo.rest.schemagen.generator.ObjectContext;
+import com.mercateo.rest.schemagen.generator.ObjectContextBuilder;
+import com.mercateo.rest.schemagen.generictype.GenericType;
+import com.mercateo.rest.schemagen.link.Scope;
+import com.mercateo.rest.schemagen.plugin.FieldCheckerForSchema;
+
 public class SchemaGeneratorFacade {
 
-    private static final Logger log = LoggerFactory.getLogger(RestJsonSchemaGenerator.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonSchemaGeneratorDefault.class);
 
     private final JsonSchemaGenerator schemaGenerator;
 
@@ -38,25 +39,24 @@ public class SchemaGeneratorFacade {
         isDebugEnabled = log.isDebugEnabled();
     }
 
-    public Optional<String> createOutputSchema(Scope scope, FieldCheckerForSchema fieldCheckerForSchema) {
+    public Optional<String> createOutputSchema(Scope scope,
+            FieldCheckerForSchema fieldCheckerForSchema) {
 
         if (isDebugEnabled) {
             log.debug("createOutputSchema {}", scope);
         }
 
         final GenericType<?> genericType = GenericType.of(scope.getReturnType(), scope
-            .getInvokedMethod()
-            .getReturnType());
-        Optional<PropertyContext<?>> propertyContext = scope.getCallContext().map(callContext -> PropertyContext.builder().build());
+                .getInvokedMethod().getReturnType());
 
-
-        return schemaGenerator.createSchema((Class<?>) scope.getInvokedMethod().getReturnType(), scope.getReturnType(),
-                propertyContext, fieldCheckerForSchema);
+        final Optional<ObjectNode> schema = schemaGenerator.createSchema(genericType,
+                PropertyContext.builder().build(), fieldCheckerForSchema);
+        return schema.map(Object::toString);
     }
 
     @SuppressWarnings("unchecked")
     public Optional<String> createInputSchema(Scope scope,
-                                              FieldCheckerForSchema fieldCheckerForSchema) {
+            FieldCheckerForSchema fieldCheckerForSchema) {
         Map<String, ObjectNode> objectNodes = new HashMap<>();
 
         if (isDebugEnabled) {
@@ -89,6 +89,7 @@ public class SchemaGeneratorFacade {
             }
 
             if (!ignore) {
+                final PropertyContextBuilder contextBuilder = PropertyContext.builder();
                 @SuppressWarnings("rawtypes")
                 final ObjectContextBuilder objectContextBuilder = ObjectContext.buildFor(GenericType
                         .of(types[i]));
@@ -96,6 +97,7 @@ public class SchemaGeneratorFacade {
                 if (scope.hasAllowedValues(i)) {
                     final List<Object> allowedValues = scope.getAllowedValues(i);
                     objectContextBuilder.withAllowedValues(allowedValues);
+                    contextBuilder.addAllAllowedValues(allowedValues);
                 }
                 if (scope.getParams() != null && scope.getParams().length > i) {
                     objectContextBuilder.withCurrentValue(scope.getParams()[i]);
@@ -105,7 +107,7 @@ public class SchemaGeneratorFacade {
                     objectContextBuilder.withDefaultValue(scope.getDefaultValue(i));
                 }
 
-                final Optional<ObjectNode> objectNodeOption = generateJsonSchema(
+                final Optional<ObjectNode> objectNodeOption = schemaGenerator.createSchema().generateJsonSchema(
                         objectContextBuilder.build(), createSchemaPropertyContext(scope,
                                 fieldCheckerForSchema));
                 if (!objectNodeOption.isPresent()) {
@@ -141,4 +143,7 @@ public class SchemaGeneratorFacade {
         }
     }
 
+    private ObjectNode createObjectNode() {
+        return new ObjectNode(new JsonNodeFactory(true));
+    }
 }
